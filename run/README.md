@@ -20,7 +20,6 @@ Compile octomap-devel (if not already compiled)
 
 Compile your catkin workspace
 
-- - - - - - - - - - - - - - - - - - - - - - - - - -
 RUN CODE:
 
 All bag files are in run/bags
@@ -37,7 +36,7 @@ All bag files are in run/bags
     -roslaunch episcan.launch
                (processes dgip point cloud into an episcan octomap
                
-- - - - - - - - - - - - - - - - - - - - - - - - - -
+
 CODE ORGANIZATION:
      -Most code is in the perceptual_model-devel ROS package, in:
            octomap_server/src:
@@ -56,10 +55,7 @@ CODE ORGANIZATION:
 
      -EpiscanOcTree code is in octomap-devel
 
-- - - - - - - - - - - - - - - - - - - - - - - - - -
 CURRENT KNOWN BUGS:
      -There is an issue with transforms not being adequately published because some of the
      recorded topics in the bagfiles don't have specified frame_ids (due to a problem in the
      sensor-side code)
-
-     -There's probably other stuff I missed--please don't hesistate to email me! (simon.j.bloch@gmail.com)

@@ -1,0 +1,111 @@
+<launch>
+  
+  <!-- 1000 by 788 -->
+  <arg name="x_off" default="212" />
+  <arg name="y_off" default="235" />
+  <arg name="w" default="761" />
+  <arg name="h" default = "470"/>
+  <!-- coordinates of bottom-left and top-right: [(212, 235) , (973, 705)] -->
+
+  <node pkg="topic_tools" type="relay" args="/episcan/depth/camera_info /episcan/direct/camera_info" name="relay_direct_node">
+  </node>
+
+  <node pkg="topic_tools" type="relay" args="/episcan/depth/camera_info /episcan/indirect/camera_info" name="relay_indirect_node">
+  </node>
+
+  <node pkg="topic_tools" type="relay" args="/episcan/depth/camera_info /episcan/global/camera_info" name="relay_global_node">
+  </node>
+
+  <!-- Image_proc -->
+  <node pkg="image_proc" type="image_proc" name="image_proc1">
+  </node>
+
+  <!-- ========== -->
+  <!-- DEPTH CROP -->
+  <!-- ========== -->
+  <node pkg="nodelet" type="nodelet" args="standalone image_proc/crop_decimate" name="episcan_depth_crop">
+
+    <param name="decimation_x" type="int" value="1" />
+    <param name="decimation_y" type="int" value="1" />
+    <param name="interpolation" type="int" value="1" /> <!-- 2 = Bicubic interpolation over 4x4-->
+    <param name="x_offset" type="int" value="$(arg x_off)" />
+    <param name="y_offset" type="int" value="$(arg y_off)" />
+    <param name="width" type="int" value="$(arg w)" />
+    <param name="height" type="int" value="$(arg h)" />
+
+    <!-- remap input topics -->
+    <remap from="camera/image_raw" to="/episcan/depth/image_rect"/>
+    <remap from="camera/image_info" to="/episcan/depth/camera_info"/>
+
+    <!-- remap output topics -->
+    <remap from="camera_out/image_raw" to="/episcan_cropped/depth/image_rect"/>
+    <remap from="camera_out/image_info" to="/episcan_cropped/depth/camera_info"/>
+  </node>
+
+  <!-- =========== -->
+  <!-- DIRECT CROP -->
+  <!-- =========== -->
+  <node pkg="nodelet" type="nodelet" args="standalone image_proc/crop_decimate" name="episcan_direct_crop">
+
+    <param name="decimation_x" type="int" value="1" />
+    <param name="decimation_y" type="int" value="1" />
+    <param name="interpolation" type="int" value="1" /> <!-- 2 = Bicubic interpolation over 4x4-->
+    <param name="x_offset" type="int" value="$(arg x_off)" />
+    <param name="y_offset" type="int" value="$(arg y_off)" />
+    <param name="width" type="int" value="$(arg w)" />
+    <param name="height" type="int" value="$(arg h)" />
+
+    <!-- remap input topics -->
+    <remap from="camera/image_raw" to="/episcan/direct/image_mono"/>
+    <remap from="camera/image_info" to="/episcan/direct/camera_info"/>
+
+    <!-- remap output topics -->
+    <remap from="camera_out/image_raw" to="episcan_cropped/direct/image_mono"/>
+    <remap from="camera_out/image_info" to="episcan_cropped/direct/image_info"/>
+  </node>
+
+  <!-- =========== -->
+  <!-- INDIRECT CROP -->
+  <!-- =========== -->
+  <node pkg="nodelet" type="nodelet" args="standalone image_proc/crop_decimate" name="episcan_indirect_crop">
+
+    <param name="decimation_x" type="int" value="1" />
+    <param name="decimation_y" type="int" value="1" />
+    <param name="interpolation" type="int" value="1" /> <!-- 2 = Bicubic interpolation over 4x4-->
+    <param name="x_offset" type="int" value="$(arg x_off)" />
+    <param name="y_offset" type="int" value="$(arg y_off)" />
+    <param name="width" type="int" value="$(arg w)" />
+    <param name="height" type="int" value="$(arg h)" />
+
+    <!-- remap input topics -->
+    <remap from="camera/image_raw" to="/episcan/indirect/image_mono"/>
+    <remap from="camera/image_info" to="/episcan/indirect/camera_info"/>
+
+    <!-- remap output topics -->
+    <remap from="camera_out/image_raw" to="episcan_cropped/indirect/image_mono"/>
+    <remap from="camera_out/image_info" to="episcan_cropped/indirect/image_info"/>
+  </node>
+
+  <!-- =========== -->
+  <!-- GLOBAL CROP -->
+  <!-- =========== -->
+  <node pkg="nodelet" type="nodelet" args="standalone image_proc/crop_decimate" name="episcan_global_crop">
+
+    <param name="decimation_x" type="int" value="1" />
+    <param name="decimation_y" type="int" value="1" />
+    <param name="interpolation" type="int" value="1" /> <!-- 2 = Bicubic interpolation over 4x4-->
+    <param name="x_offset" type="int" value="$(arg x_off)" />
+    <param name="y_offset" type="int" value="$(arg y_off)" />
+    <param name="width" type="int" value="$(arg w)" />
+    <param name="height" type="int" value="$(arg h)" />
+
+    <!-- remap input topics -->
+    <remap from="camera/image_raw" to="/episcan/global/image_mono"/>
+    <remap from="camera/image_info" to="/episcan/global/camera_info"/>
+
+    <!-- remap output topics -->
+    <remap from="camera_out/image_raw" to="episcan_cropped/global/image_mono"/>
+    <remap from="camera_out/image_info" to="episcan_cropped/global/image_info"/>
+  </node>
+
+</launch>

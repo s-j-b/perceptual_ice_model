@@ -1,0 +1,26 @@
+<launch>
+  <!-- This launch file decompresses stereo images from a bag file with the name /ueye/left and /ueye/right and then stereo processes them to create pointclouds. Two pointclouds are created a full res pcloud and a downsampled point cloud-->
+  <!-- Author: Simon Bloch -->
+  <!-- Date: 07/20/2016 -->
+
+  <param name="use_sim_time" value="true" />
+
+  <!-- PCL Manager -->
+  <node pkg="nodelet" type="nodelet" name="filter_pcl_manager" args="manager" output="screen"/>
+
+  <!--
+  <node pkg="nodelet" type="nodelet" name="episcan_points" args="load pcl/VoxelGrid filter_pcl_manager" output="screen">
+    <remap from="~input" to="/dgip_points" />
+    <rosparam>
+      filter_field_name: z
+      filter_limit_min: 0.2
+      filter_limit_max: 10
+      filter_limit_negative: False
+      leaf_size: 0.008
+    </rosparam>
+  </node>
+  -->
+
+  <!-- RVIZ start and display stereo pointcloud -->
+  <node pkg="rviz" type="rviz" output="screen" name="rviz" args="-l -d /home/jupiter/run/stereo_view.rviz"/>    <!--Change path in argument to location of stereo_view.rviz -->
+</launch>

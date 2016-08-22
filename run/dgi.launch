@@ -1,0 +1,14 @@
+<launch>
+
+  <arg name="pi/2" value="1.5707963267948966" />
+
+  <node pkg="tf" type="static_transform_publisher" name="episcan_tf_broadcaster" args="0 0 0 -$(arg pi/2) 0 -$(arg pi/2) /episcan_optical /episcan  100" />;
+
+  <node pkg="tf" type="static_transform_publisher" name="base_link_tf_broadcaster" args="0 0 .5 0 0 0 /base_link /episcan_optical 100" />;
+
+  <node pkg="tf" type="static_transform_publisher" name="odom_tf_broadcaster" args="0 0 0 0 0 0 /odom /base_link 100" />;
+  
+  <node pkg="octomap_server" type="dgi_server_node" name="dgi_server" output="screen"></node>
+  <node pkg="octomap_server" type="dgip_server_node" name="dgip_server" output="screen"></node>
+  <node pkg="octomap_server" type="rgb_server_node" name="rgb_server" output="screen"></node>
+</launch>
